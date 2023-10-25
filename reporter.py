@@ -16,37 +16,22 @@ import os, sys, html
 # specify here the path of the install script...
 sys.path.append("/home/p4p1/Documents/lnd/havoc-reporter/")
 
-from network_vulnerabilities import network_vulns
-from active_directory import active_directory_vulns 
-from windows_privesc import windows_privesc_vulns 
+from html_source.mitre import html_panel_mitre
+from html_source.vulnerabilities import html_panel_vulns
+from mitre.reconnaissance import reconnaissance_mitre
+
+from vulns.network_vulnerabilities import network_vulns
+from vulns.active_directory import active_directory_vulns 
+from vulns.windows_privesc import windows_privesc_vulns 
 
 tree_display_vulns = None
-html_panel_vulns = """
-<div>
-    <h1 style="color:#bd93f9">%s</h1><br />
-    <img src="%s" width="100" />
-    <table>
-        <tr>
-            <th>MITRE ATT&CK ID: </th>
-            <th style="color: #f96769">%s</th>
-        </tr>
-    </table>
-    <h3 style="color:#71e0cb">Description:</h3>
-    <p>%s</p>
-    <h3 style="color:#71e0cb">Sample command:</h3>
-    <div style="background-color:#3b3e50; padding: 5px 5px 5px 5px;">
-        <p>%s</p>
-    </div>
-    <h3 style="color:#71e0cb">Resources:</h3>
-    <ul>
-        %s
-    </ul>
-</div>
-"""
+tree_display_mitre = None
 
 net_titles = [item["title"] for item in network_vulns]
 ad_titles = [item["title"] for item in active_directory_vulns]
 winpriv_titles = [item["title"] for item in windows_privesc_vulns]
+
+recon_mitre_titles = [item["title"] for item in reconnaissance_mitre]
 
 # Function to set the HTML of the page
 def select_tree_vulns(data):
@@ -55,7 +40,7 @@ def select_tree_vulns(data):
     desc = ""
     image = ""
     mitre = ""
-    external = ""
+    external = []
     command = ""
     if data in net_titles:
         title = network_vulns[net_titles.index(data)]["title"]
@@ -90,9 +75,42 @@ tree_display_vulns.addRow("General Network", *net_titles)
 tree_display_vulns.addRow("Active Directory", *ad_titles)
 tree_display_vulns.addRow("Windows Privilege Escalation", *winpriv_titles)
 
+def select_tree_mitre(data):
+    global tree_display_mitre
+    title = ""
+    mitreid = ""
+    desc = ""
+    image = ""
+    sub_tech = []
+    mitigations = []
+    if data in recon_mitre_titles:
+        title = reconnaissance_mitre[recon_mitre_titles.index(data)]["title"]
+        mitreid= reconnaissance_mitre[recon_mitre_titles.index(data)]["mitreid"]
+        desc = reconnaissance_mitre[recon_mitre_titles.index(data)]["description"]
+        sub_tech = reconnaissance_mitre[recon_mitre_titles.index(data)]["sub-technique"]
+        mitigations = reconnaissance_mitre[recon_mitre_titles.index(data)]["Mitigations"]
+    subtech_data = ""
+    mitigation_data = ""
+    if title != "":
+        if len(sub_tech) > 0:
+            subtech_data = "<h3 style=\"color:#71e0cb\">Sub-techniques:</h3><ul>"
+            for obj in sub_tech:
+                subtech_data = subtech_data + "<li><a style=\"color:#e100ff\" href=\"%s\">%s</a></li>" % (obj["link"], obj["title"])
+            subtech_data = subtech_data + "</ul>"
+        if len(mitigations) > 0:
+            mitigation_data = "<h3 style=\"color:#71e0cb\">Mitigations:</h3><table>"
+            for obj in mitigations:
+                mitigation_data = mitigation_data + "<tr><th><a style=\"color:#e100ff\" href=\"%s\">%s</a></th><th>%s</th></tr>" % (obj["link"], obj["title"], obj["description"])
+        tree_display_mitre.setPanel(html_panel_mitre % (title, image, mitreid, desc, subtech_data, mitigation_data))
+
+tree_display_mitre = havocui.Tree("MITRE ATTACK", select_tree_mitre, True)
+tree_display_mitre.addRow("Reconnaissance", *recon_mitre_titles)
+
 def open_vulns():
     tree_display_vulns.setBottomTab()
+def open_mitre():
+    tree_display_mitre.setBottomTab()
 def color_pick():
     print(havocui.colordialog())
 
-havocui.createtab("Reporter", "Vulnerabilities", open_vulns, "color", color_pick)
+havocui.createtab("Reporter", "Vulnerabilities", open_vulns, "MITRE ATTACK", open_mitre, "color", color_pick)
