@@ -37,7 +37,7 @@ script.
 
 ### HTML style:
 
-Currently this plugin save it's HTML inside of the reporter.py script directly
+Currently this plugin save it's HTML inside of the html_source folder directly
 in the source. You will find in the code the *html_panel_vulns* variable which
 has the HTML for the vulnerabilities. This can then be modified to fit your
 reporting theme.
