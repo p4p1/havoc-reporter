@@ -8,7 +8,7 @@ the vulnerability and it's information. The HTML page can be edited to fit the
 style of any reports since the web view allows for styled text copying and can
 be pasted directly inside of a report.
 
-![Screenshot of Tree Window]()
+![Screenshot of Tree Window](https://raw.githubusercontent.com/p4p1/havoc-reporter/main/assets/reporter.png)
 
 ## Install:
 
@@ -21,13 +21,13 @@ first recommended to clone this repository using the following command:
 To import the module launch the client and navigate to *Scripts Manager* then
 *Load Script* like shown in the following screenshots.
 
-![Script Manager]()
-![Load Script]()
+![Script Manager](https://raw.githubusercontent.com/p4p1/havoc-reporter/main/assets/tuto1.png)
+![Load Script](https://raw.githubusercontent.com/p4p1/havoc-reporter/main/assets/tuto2.png)
 
 You will need to import the reporter.py python script since that is the main
 script.
 
-![Import Script]()
+![Import Script](https://raw.githubusercontent.com/p4p1/havoc-reporter/main/assets/tuto3.png)
 
 ## Customization:
 
@@ -38,7 +38,7 @@ in the source. You will find in the code the *html_panel_vulns* variable which
 has the HTML for the vulnerabilities. This can then be modified to fit your
 reporting theme.
 
-![HTML code]()
+![HTML code](https://raw.githubusercontent.com/p4p1/havoc-reporter/main/assets/html_code.png)
 
 ### Adding vulnerabilities:
 
