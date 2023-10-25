@@ -18,6 +18,9 @@ first recommended to clone this repository using the following command:
 ```
  $ git clone https://github.com/p4p1/havoc-reporter
 ```
+
+> NOTE: After cloning change the path on line 17 to the path where you cloned the repo
+
 To import the module launch the client and navigate to *Scripts Manager* then
 *Load Script* like shown in the following screenshots.
 
@@ -28,6 +31,7 @@ You will need to import the reporter.py python script since that is the main
 script.
 
 ![Import Script](https://raw.githubusercontent.com/p4p1/havoc-reporter/main/assets/tuto3.png)
+
 
 ## Customization:
 
