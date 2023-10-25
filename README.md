@@ -1,12 +1,12 @@
 # havoc-reporter
 
-A havoc UI python module to help in reporting any vulnerabilities to exploit on
-an internal network. This module covers general network vulnerabilities, active
-directory exploit techniques and Windows privilege escalation. It uses a tree
-interface to list out the vulnerabilities and a HTML web text browser to display
-the vulnerability and it's information. The HTML page can be edited to fit the
-style of any reports since the web view allows for styled text copying and can
-be pasted directly inside of a report.
+A [havoc python module](https://havocframework.com/)to help in reporting any
+vulnerabilities and how to exploit on an internal network. This module covers
+general network vulnerabilities, active directory exploit techniques and Windows
+privilege escalation. It uses a tree interface to list out the vulnerabilities
+and a HTML web text browser to display the vulnerability and it's information.
+The HTML page can be edited to fit the style of any reports since the web view
+allows for styled text copying and can be pasted directly inside of a report.
 
 ![Screenshot of Tree Window](https://raw.githubusercontent.com/p4p1/havoc-reporter/main/assets/reporter.png)
 
@@ -44,7 +44,7 @@ reporting theme.
 
 To add new vulnerabilities to this script you will need to follow the following
 dictionary structure:
-```
+```python
     {
         "title": "Title of the vulnerability",
         "desc": "Description of the vulnerabiltity",
@@ -65,9 +65,12 @@ currently we have the three following categories:
  - Active Directory vulnerabilities (active_directory.py)
  - Windows privilege escalation vulnerabilities (windows_privesc.py)
 
+> Images need to be in base64 since QTextBrowser does not allow for online hosted content
+
 ## Support:
 
 If you like this small plugin and want to support by adding more vulnerabilities
 you are invited to do so by cloning the repository and adding more. I also need
 help in generating base64 images that represent the vulnerabilities that are in
-place.
+place. I will also be implementing MITRE ATT&CK techniques in the future as well
+to assist in mapping out TTPs.
