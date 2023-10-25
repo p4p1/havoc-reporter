@@ -1,6 +1,6 @@
 # havoc-reporter
 
-A [havoc python module](https://havocframework.com/)to help in reporting any
+A [havoc python module](https://havocframework.com/) to help in reporting any
 vulnerabilities and how to exploit on an internal network. This module covers
 general network vulnerabilities, active directory exploit techniques and Windows
 privilege escalation. It uses a tree interface to list out the vulnerabilities
