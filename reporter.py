@@ -11,10 +11,31 @@
 #  inside of: Scripts > Scripts Manager > Load Script
 
 import havocui
-import os, sys, html
+import webbrowser
+import os, sys, html, json
+
+config = {
+    "install_path": ""
+}
+
+# if no config file found create one
+if not os.path.exists(os.path.expanduser("~/") + ".config/havoc-reporter/config.json"):
+    if not os.path.exists(os.path.expanduser("~/") + ".config/havoc-reporter/"):
+        os.mkdir(os.path.expanduser("~/") + ".config/havoc-reporter")
+    with open(os.path.expanduser("~/") + ".config/havoc-reporter/config.json", "w") as outfile:
+        json.dump(config, outfile)
+else:  # use config file
+    with open(os.path.expanduser("~/") + ".config/havoc-reporter/config.json") as outfile:
+        config = json.load(outfile)
 
 # specify here the path of the install script...
-sys.path.append("/home/p4p1/Documents/github/havoc-reporter")
+while not os.path.exists(config["install_path"]):
+    new_path = havocui.inputdialog("specify the path of the install", "The path of where this script is installed is wrong please provide with the correct path:")
+    config["install_path"] = new_path.decode('utf-8')
+    with open(os.path.expanduser("~/") + ".config/havoc-reporter/config.json", "w") as outfile:
+        json.dump(config, outfile)
+
+sys.path.append(config["install_path"])
 
 from html_source.mitre import html_panel_mitre
 from html_source.vulnerabilities import html_panel_vulns
@@ -26,6 +47,9 @@ from vulns.windows_privesc import windows_privesc_vulns
 
 tree_display_vulns = None
 tree_display_mitre = None
+settings_widget = None
+
+
 
 net_titles = [item["title"] for item in network_vulns]
 ad_titles = [item["title"] for item in active_directory_vulns]
@@ -107,11 +131,37 @@ def select_tree_mitre(data):
 tree_display_mitre = havocui.Tree("MITRE ATTACK", select_tree_mitre, True)
 tree_display_mitre.addRow("Reconnaissance", *recon_mitre_titles)
 
+def change_config_path():
+    global config
+    tmp = config["install_path"]
+    config["install_path"] = ""
+    while not os.path.exists(config["install_path"]):
+        new_path = havocui.inputdialog("specify the path of the install", "The path of where this script is installed is wrong please provide with the correct path:")
+        config["install_path"] = new_path.decode('utf-8')
+        with open(os.path.expanduser("~/") + ".config/havoc-reporter/config.json", "w") as outfile:
+            json.dump(config, outfile)
+    settings_widget.replaceLabel(tmp, config["install_path"])
+def open_config_html_vuln():
+    webbrowser.open(config["install_path"] + "/html_source/vulnerabilities.py")
+def open_config_html_mitre():
+    webbrowser.open(config["install_path"] + "/html_source/mitre.py")
+# define settings widget
+settings_widget = havocui.Widget("Reporter Settings", True)
+settings_widget.addLabel("<h1 style='color:#bd93f9'>Reporter Settings</h1>")
+settings_widget.addLabel("<h2 style='color:#71e0cb'>Install path:</h2>")
+settings_widget.addLabel(config["install_path"])
+settings_widget.addButton("Change path", change_config_path)
+settings_widget.addLabel("<h2 style='color:#71e0cb'>Open HTML template:</h2>")
+settings_widget.addButton("Open Vulnerabilities", open_config_html_vuln)
+settings_widget.addButton("Open MITRE", open_config_html_mitre)
+
 def open_vulns():
     tree_display_vulns.setBottomTab()
 def open_mitre():
     tree_display_mitre.setBottomTab()
+def open_settings():
+    settings_widget.setSmallTab()
 def color_pick():
     print(havocui.colordialog())
 
-havocui.createtab("Reporter", "Vulnerabilities", open_vulns, "MITRE ATTACK", open_mitre, "color", color_pick)
+havocui.createtab("Reporter", "Vulnerabilities", open_vulns, "MITRE ATTACK", open_mitre, "Settings", open_settings,"Color", color_pick)
