@@ -15,6 +15,7 @@ with open(file, "r") as f:
 for t in tactics: 
     tactic = t["tactic"].lower().replace(" ", "_")
 
-    with open(tactic + ".py", "w") as f:
+    with open("tactics.py", "a") as f:
         f.write(tactic + " = ")
         json.dump(t["techniques"], f, ensure_ascii=False, indent=4)
+        f.write("\n\n")
