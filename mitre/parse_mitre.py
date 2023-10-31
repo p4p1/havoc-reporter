@@ -23,6 +23,7 @@ tactics = [
 ]
 mitre = []
 outfile = "mitre.json"
+tactics_file = "tactics.py"
 
 def filter(lst):
     return [i for i in lst.contents if i != "\n"]
@@ -119,14 +120,15 @@ def fetch_mitre():
         json.dump(mitre, f, ensure_ascii=False, indent=4)
     print("[+] MITRE ATT&CK data successfully written to file", outfile)
 
-    # Create python files for Havoc plugin
-    print("[*] Creating python file for each tactic...")
+    # Create python file for Havoc plugin
+    print("[*] Creating python file...")
     for t in mitre:
         tactic = t["tactic"].lower().replace(" ", "_")
-        with open(tactic + ".py", "w") as f:
+        with open(tactics_file, "a") as f:
             f.write(tactic + " = ")
             json.dump(t["techniques"], f, ensure_ascii=False, indent=4)
-        print("[+] Created", tactic + ".py")
+            f.write("\n\n")
+    print("[+] Created", tactics_file)
 
 def main():
     fetch_mitre()
